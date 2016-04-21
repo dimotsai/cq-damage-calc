@@ -411,6 +411,7 @@ class DamageCalculator extends React.Component {
 							</Row>
 							<Row>
 								<Col xs={12} sm={12} md={12} lg={12}>
+									<p style={{textAlign: 'right'}}>Created by Dimo Tsai (綿綿糖)</p>
 								</Col>
 							</Row>
 						</Grid>
