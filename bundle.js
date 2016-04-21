@@ -643,7 +643,15 @@
 								_react2.default.createElement(
 									_reactFlexboxGrid.Row,
 									null,
-									_react2.default.createElement(_reactFlexboxGrid.Col, { xs: 12, sm: 12, md: 12, lg: 12 })
+									_react2.default.createElement(
+										_reactFlexboxGrid.Col,
+										{ xs: 12, sm: 12, md: 12, lg: 12 },
+										_react2.default.createElement(
+											'p',
+											{ style: { textAlign: 'right' } },
+											'Created by Dimo Tsai (綿綿糖)'
+										)
+									)
 								)
 							)
 						)
