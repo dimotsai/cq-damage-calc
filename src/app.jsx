@@ -350,7 +350,7 @@ class DamageCalculator extends React.Component {
 		} else if (heroInfo.damageType == 'magic') {
 			damageScale =
 				1.0/(Math.max(enemyInfo.resist * (isPvP ? this.attributeScaleInPvP.resist : 1.0) - heroInfo.resistPenetration, 0) * 0.0034 + 1.0);
-		} else if (heroInfo.damageInfo == 'neutral') {
+		} else if (heroInfo.damageType == 'neutral') {
 			damageScale = 1.0;
 		}
 
@@ -368,7 +368,7 @@ class DamageCalculator extends React.Component {
 			(heroInfo.criticalChance / 100.0 * result.criticalDamage)
 			+ (1.0 - heroInfo.criticalChance / 100.0) * result.damage;
 
-		if (heroInfo.damageInfo != 'neutral') {
+		if (heroInfo.damageType != 'neutral') {
 			let missRate = Math.max(enemyInfo.evasion - heroInfo.accuracy, 0) / 100.0;
 			let hitRate = 1.0 - missRate;
 			result.averageDamage *= hitRate;

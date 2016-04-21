@@ -572,7 +572,7 @@
 					damageScale = 1.0 / (Math.max(enemyInfo.armor * (isPvP ? this.attributeScaleInPvP.armor : 1.0) - heroInfo.armorPenetration, 0) * 0.0034 + 1.0);
 				} else if (heroInfo.damageType == 'magic') {
 					damageScale = 1.0 / (Math.max(enemyInfo.resist * (isPvP ? this.attributeScaleInPvP.resist : 1.0) - heroInfo.resistPenetration, 0) * 0.0034 + 1.0);
-				} else if (heroInfo.damageInfo == 'neutral') {
+				} else if (heroInfo.damageType == 'neutral') {
 					damageScale = 1.0;
 				}
 
@@ -584,7 +584,7 @@
 
 				result.averageDamage = heroInfo.criticalChance / 100.0 * result.criticalDamage + (1.0 - heroInfo.criticalChance / 100.0) * result.damage;
 
-				if (heroInfo.damageInfo != 'neutral') {
+				if (heroInfo.damageType != 'neutral') {
 					var missRate = Math.max(enemyInfo.evasion - heroInfo.accuracy, 0) / 100.0;
 					var hitRate = 1.0 - missRate;
 					result.averageDamage *= hitRate;
