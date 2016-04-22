@@ -25,12 +25,17 @@ module.exports = {
 		]
 	},
 	plugins: [
+		new webpack.DefinePlugin({
+			"process.env": {
+				NODE_ENV: JSON.stringify("production")
+			}
+		}),
 		//Minify the bundle
 		new webpack.optimize.UglifyJsPlugin({
-		  compress: {
-			//supresses warnings, usually from module minification
-			warnings: false,
-		  },
+			compress: {
+				//supresses warnings, usually from module minification
+				warnings: false,
+			},
 		}),
 
 		new HtmlWebpackPlugin({
