@@ -6,6 +6,8 @@ import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
+import FlatButton from 'material-ui/FlatButton';
+import Dialog from 'material-ui/Dialog';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import ArrowDropDown from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
@@ -29,7 +31,8 @@ class DamageCalculator extends React.Component {
 				damage: 0,
 				criticalDamage: 0,
 				averageDamage: 0
-			}
+			},
+            helpDialogOpen: false
 		}
 
 		this.attributeScaleInPvP = {
@@ -93,7 +96,30 @@ class DamageCalculator extends React.Component {
         this.context.i18n.changeLanguage(lang);
     };
 
+    openHelpDialog() {
+        this.setState({
+            helpDialogOpen: true
+        });
+    }
+
+    closeHelpDialog() {
+        this.setState({
+            helpDialogOpen: false
+        });
+    }
+
 	render() {
+
+        const t = this.context.i18n.getFixedT();
+
+		const helpDialogActions = [
+		  <FlatButton
+			label="Ok"
+			primary={true}
+			keyboardFocused={true}
+			onTouchTap={this.closeHelpDialog.bind(this)}
+		  />
+		];
 		return (
 			<MuiThemeProvider muiTheme={getMuiTheme()}>
 				<div>
@@ -108,6 +134,9 @@ class DamageCalculator extends React.Component {
 								targetOrigin={{horizontal: 'right', vertical: 'top'}}
 								anchorOrigin={{horizontal: 'right', vertical: 'top'}}
 							>
+								<MenuItem
+                                    primaryText="Help" onTouchTap={this.openHelpDialog.bind(this)}
+                                />
 								<MenuItem
                                     primaryText="GitHub" onTouchTap={() => {window.open('https://github.com/dimotsai/cq-damage-calc/')}}
                                 />
@@ -143,6 +172,23 @@ class DamageCalculator extends React.Component {
 							</Row>
 						</Grid>
 					</PageContents>
+					<Dialog
+					  title="Help"
+					  actions={helpDialogActions}
+					  modal={false}
+					  open={this.state.helpDialogOpen}
+					  onRequestClose={this.closeHelpDialog.bind(this)}
+					>
+						<p>{t('common:helpMessage')}</p>
+                        <ul>
+                            <li>29 + 2 &#9166;</li>
+                            <li>29 - 2 &#9166;</li>
+                            <li>29 * 0.5 &#9166;</li>
+                            <li>29 / 2 &#9166;</li>
+                            <li>29 * 3 - 5 &#9166;</li>
+                            <li>abs(-29) &#9166;</li>
+                        </ul>
+					</Dialog>
 				</div>
 			</MuiThemeProvider>
 		);

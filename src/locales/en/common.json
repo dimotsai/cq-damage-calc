@@ -23,5 +23,6 @@
     "neutral": "Neutral",
     "hero": "Hero",
     "enemy": "Enemy",
-    "result": "Result"
+    "result": "Result",
+    "helpMessage": "The following expressions are allowed in all text fields: "
 }
