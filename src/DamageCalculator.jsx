@@ -3,6 +3,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import MenuItem from 'material-ui/MenuItem';
+import Divider from 'material-ui/Divider';
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
@@ -107,6 +108,10 @@ class DamageCalculator extends React.Component {
 								targetOrigin={{horizontal: 'right', vertical: 'top'}}
 								anchorOrigin={{horizontal: 'right', vertical: 'top'}}
 							>
+								<MenuItem
+                                    primaryText="GitHub" onTouchTap={() => {window.open('https://github.com/dimotsai/cq-damage-calc/')}}
+                                />
+                                <Divider />
 								<MenuItem
                                     primaryText="English" onTouchTap={this.handleChangeLanguage.bind(this, 'en')}
                                 />
