@@ -4,10 +4,11 @@ import SelectField from 'material-ui/SelectField';
 import Toggle from 'material-ui/Toggle';
 import MenuItem from 'material-ui/MenuItem';
 import isNumeric from 'isnumeric';
+import { translate } from 'react-i18next';
 
 import PaddedPaper from './PaddedPaper';
 
-export default class HeroInfo extends React.Component {
+class HeroInfo extends React.Component {
 	constructor(props, context) {
 		super(props, context);
 
@@ -18,7 +19,7 @@ export default class HeroInfo extends React.Component {
 			criticalDamage: 50,
 			accuracy: 0,
 			armorPenetration: 0,
-			resistPenetration: 0,
+			resistancePenetration: 0,
 			damageType: 'physical',
 			skill: 200,
 			isPvP: true
@@ -31,11 +32,13 @@ export default class HeroInfo extends React.Component {
 			criticalDamage: 'number',
 			accuracy: 'number',
 			armorPenetration: 'number',
-			resistPenetration: 'number',
+			resistancePenetration: 'number',
 			damageType: 'string',
 			skill: 'number',
 			isPvP: 'boolean'
 		}
+
+        context.i18n.on('languageChanged', (lng) => {this.forceUpdate()});
 	}
 
 	componentWillMount() {
@@ -72,65 +75,67 @@ export default class HeroInfo extends React.Component {
 	}
 
 	render() {
+        const t = this.context.i18n.getFixedT();
+
 		return (
 			<PaddedPaper>
-				<h2>Hero</h2>
+				<h2>{t('common:hero')}</h2>
 				<SelectField
 				  value={this.state.basis}
 				  onChange={this.handleSelectFieldChange.bind(this, 'basis')}
-				  floatingLabelText="Basis"
+				  floatingLabelText={t('common:basis')}
 				>
-					<MenuItem key={1} value={"atk"} primaryText="Attack Power" />
-					<MenuItem key={2} value={"hp"} primaryText="HP" />
-					<MenuItem key={3} value={"armor"} primaryText="Armor" />
-					<MenuItem key={4} value={"resist"} primaryText="Resist" />
+					<MenuItem key={1} value={"atk"} primaryText={t('common:attackPower')} />
+					<MenuItem key={2} value={"hp"} primaryText={t('common:hp')} />
+					<MenuItem key={3} value={"armor"} primaryText={t('common:armor')} />
+					<MenuItem key={4} value={"resist"} primaryText={t('common:resistance')} />
 				</SelectField><br />
 				<TextField
-				  floatingLabelText="Value"
+				  floatingLabelText={t('common:value')}
 				  onChange={this.handleChange.bind(this, 'value')}
 				  value={this.state.value}
 				/><br/>
 				<SelectField
 				  value={this.state.damageType}
 				  onChange={this.handleSelectFieldChange.bind(this, 'damageType')}
-				  floatingLabelText="Damage Type"
+				  floatingLabelText={t('common:damageType')}
 				>
-					<MenuItem key={1} value={"physical"} primaryText="Physical" />
-					<MenuItem key={2} value={"magic"} primaryText="Magic" />
-					<MenuItem key={3} value={"neutral"} primaryText="Neutral" />
+					<MenuItem key={1} value={"physical"} primaryText={t('common:physical')} />
+					<MenuItem key={2} value={"magic"} primaryText={t('common:magic')} />
+					<MenuItem key={3} value={"neutral"} primaryText={t('common:neutral')} />
 				</SelectField><br />
 				<TextField
-				  floatingLabelText="Critical Chance"
+				  floatingLabelText={t('common:criticalChance')}
 				  onChange={this.handleChange.bind(this, 'criticalChance')}
 				  value={this.state.criticalChance}
 				/>%<br/>
 				<TextField
-				  floatingLabelText="Critical Damage"
+				  floatingLabelText={t('common:criticalDamage')}
 				  onChange={this.handleChange.bind(this, 'criticalDamage')}
 				  value={this.state.criticalDamage}
 				/>%<br/>
 				<TextField
-				  floatingLabelText="Accuracy"
+				  floatingLabelText={t('common:accuracy')}
 				  onChange={this.handleChange.bind(this, 'accuracy')}
 				  value={this.state.accuracy}
 				/><br/>
 				<TextField
-				  floatingLabelText="Armor Penetration"
+				  floatingLabelText={t('common:armorPenetration')}
 				  onChange={this.handleChange.bind(this, 'armorPenetration')}
 				  value={this.state.armorPenetration}
 				/><br/>
 				<TextField
-				  floatingLabelText="Resist Penetration"
-				  onChange={this.handleChange.bind(this, 'resistPenetration')}
-				  value={this.state.resistPenetration}
+				  floatingLabelText={t('common:resistancePenetration')}
+				  onChange={this.handleChange.bind(this, 'resistancePenetration')}
+				  value={this.state.resistancePenetration}
 				/><br/>
 				<TextField
-				  floatingLabelText="Skill"
+				  floatingLabelText={t('common:skillPower')}
 				  onChange={this.handleChange.bind(this, 'skill')}
 				  value={this.state.skill}
 				/>%<br/>
 				<Toggle
-					  label="Is PvP?"
+					  label={t('common:isPvP')}
 					  defaultToggled={this.state.isPvP}
 					  onToggle={this.handleChange.bind(this, 'isPvP')}
 					  style={{marginTop: 16, marginBottom: 16, maxWidth: 250}}
@@ -148,3 +153,8 @@ HeroInfo.defaultProps = {
 	onChange: () => {}
 };
 
+HeroInfo.contextTypes = {
+	i18n: React.PropTypes.object.isRequired
+};
+
+export default HeroInfo;

@@ -10,8 +10,10 @@ injectTapEventPlugin();
 // raised button with the text "Default"
 import React from 'react'
 import ReactDOM from 'react-dom';
+import { I18nextProvider } from 'react-i18next';
 
 import DamageCalculator from './DamageCalculator'
+import i18n from './i18n';
 
 class App extends React.Component {
 	constructor(props, context) {
@@ -20,7 +22,9 @@ class App extends React.Component {
 
 	render() {
 		return (
-			<DamageCalculator />
+			<I18nextProvider i18n={ i18n }>
+				<DamageCalculator />
+			</I18nextProvider>
 		);
 	}
 }

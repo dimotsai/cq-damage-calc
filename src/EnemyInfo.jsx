@@ -11,10 +11,12 @@ export default class EnemyInfo extends React.Component {
 
 		this.state = {
 			armor: 0,
-			resist: 0,
+			resistance: 0,
 			damageReduced: 0,
 			evasion: 0
 		}
+
+        context.i18n.on('languageChanged', (lng) => {this.forceUpdate()});
 	}
 
 	componentWillMount() {
@@ -28,26 +30,29 @@ export default class EnemyInfo extends React.Component {
 	}
 
 	render() {
+
+        const t = this.context.i18n.getFixedT();
+
 		return (
 			<PaddedPaper>
-				<h2>Enemy</h2>
+				<h2>{t('common:enemy')}</h2>
 				<TextField
-				  floatingLabelText="Armor"
+				  floatingLabelText={t('common:armor')}
 				  onChange={this.handleChange.bind(this, 'armor')}
 				  value={this.state.armor}
 				/><br/>
 				<TextField
-				  floatingLabelText="Resist"
-				  onChange={this.handleChange.bind(this, 'resist')}
-				  value={this.state.resist}
+				  floatingLabelText={t('common:resistance')}
+				  onChange={this.handleChange.bind(this, 'resistance')}
+				  value={this.state.resistance}
 				/><br/>
 				<TextField
-				  floatingLabelText="Damage Reduced by"
+				  floatingLabelText={t('common:damageReducedBy')}
 				  onChange={this.handleChange.bind(this, 'damageReduced')}
 				  value={this.state.damageReduced}
 				/>%<br/>
 				<TextField
-				  floatingLabelText="Evasion"
+				  floatingLabelText={t('common:evasion')}
 				  onChange={this.handleChange.bind(this, 'evasion')}
 				  value={this.state.evasion}
 				/><br/>
@@ -64,3 +69,6 @@ EnemyInfo.defaultProps = {
 	onChange: (event, info) => {}
 };
 
+EnemyInfo.contextTypes = {
+	i18n: React.PropTypes.object.isRequired
+};

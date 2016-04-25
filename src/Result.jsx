@@ -13,6 +13,8 @@ export default class Result extends React.Component {
 			criticalDamage: 0,
 			averageDamage: 0
 		}
+
+        context.i18n.on('languageChanged', (lng) => {this.forceUpdate()});
 	}
 
 	componentWillReceiveProps(props) {
@@ -24,20 +26,23 @@ export default class Result extends React.Component {
 	}
 
 	render() {
+
+        const t = this.context.i18n.getFixedT();
+
 		return (
 			<PaddedPaper>
-				<h2>Result</h2>
+				<h2>{t('common:result')}</h2>
 				<List>
 					<ListItem
-						primaryText="Damage"
+						primaryText={t('common:damage')}
 						secondaryText={this.state.damage.toString()}
 					/>
 					<ListItem
-						primaryText="Critical Damage"
+						primaryText={t('common:criticalDamage')}
 						secondaryText={this.state.criticalDamage.toString()}
 					/>
 					<ListItem
-						primaryText="Average Damage (evasion included)"
+						primaryText={t('common:averageDamageWithEvasion')}
 						secondaryText={this.state.averageDamage.toString()}
 					/>
 				</List>
@@ -58,3 +63,6 @@ Result.defaultProps = {
 	averageDamage: 0
 }
 
+Result.contextTypes = {
+	i18n: React.PropTypes.object.isRequired
+};

@@ -2,7 +2,14 @@ import React from 'react'
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
+import MenuItem from 'material-ui/MenuItem';
+import IconMenu from 'material-ui/IconMenu';
+import IconButton from 'material-ui/IconButton';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import ArrowDropDown from 'material-ui/svg-icons/navigation/arrow-drop-down';
+import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
 import {Grid, Row, Col} from 'react-flexbox-grid';
+import { translate } from 'react-i18next';
 
 import PageContents from './PageContents';
 import PaddedPaper from './PaddedPaper';
@@ -10,7 +17,7 @@ import HeroInfo from './HeroInfo';
 import EnemyInfo from './EnemyInfo';
 import Result from './Result';
 
-export default class DamageCalculator extends React.Component {
+class DamageCalculator extends React.Component {
 	constructor(props, context) {
 		super(props, context);
 
@@ -28,7 +35,7 @@ export default class DamageCalculator extends React.Component {
 			atk: 1.0,
 			hp: 1.0,
 			armor: 1.75,
-			resist: 1.75
+			resistance: 1.75
 		}
 	}
 
@@ -46,7 +53,7 @@ export default class DamageCalculator extends React.Component {
 				1.0/(Math.max(enemyInfo.armor * (isPvP ? this.attributeScaleInPvP.armor : 1.0) - heroInfo.armorPenetration, 0) * 0.0034 + 1.0);
 		} else if (heroInfo.damageType == 'magic') {
 			damageScale =
-				1.0/(Math.max(enemyInfo.resist * (isPvP ? this.attributeScaleInPvP.resist : 1.0) - heroInfo.resistPenetration, 0) * 0.0034 + 1.0);
+				1.0/(Math.max(enemyInfo.resistance * (isPvP ? this.attributeScaleInPvP.resistance : 1.0) - heroInfo.resistancePenetration, 0) * 0.0034 + 1.0);
 		} else if (heroInfo.damageType == 'neutral') {
 			damageScale = 1.0;
 		}
@@ -81,14 +88,33 @@ export default class DamageCalculator extends React.Component {
 		this.setState(state);
 	}
 
+    handleChangeLanguage(lang, e) {
+        this.context.i18n.changeLanguage(lang);
+    };
+
 	render() {
 		return (
 			<MuiThemeProvider muiTheme={getMuiTheme()}>
 				<div>
 					<AppBar
 						title="CQ Damage Calculator"
-						iconClassNameRight="muidocs-icon-navigation-expand-more"
 						style={{ position: "fixed", top: 0, left: 0 }}
+						iconElementRight={
+							<IconMenu
+								iconButtonElement={
+									<IconButton><MoreVertIcon /></IconButton>
+								}
+								targetOrigin={{horizontal: 'right', vertical: 'top'}}
+								anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+							>
+								<MenuItem
+                                    primaryText="English" onTouchTap={this.handleChangeLanguage.bind(this, 'en')}
+                                />
+								<MenuItem
+                                    primaryText="繁體中文" onTouchTap={this.handleChangeLanguage.bind(this, 'zh-TW')}
+                                />
+							</IconMenu>
+						}
 					/>
 					<PageContents>
 						<Grid>
@@ -118,3 +144,8 @@ export default class DamageCalculator extends React.Component {
 	}
 }
 
+DamageCalculator.contextTypes = {
+	i18n: React.PropTypes.object.isRequired
+};
+
+export default DamageCalculator;
