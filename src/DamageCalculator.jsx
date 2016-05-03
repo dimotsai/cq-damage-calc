@@ -71,8 +71,6 @@ class DamageCalculator extends React.Component {
                 console.error('Parameter "d" is invalid');
             }
         }
-
-        console.log('hashchange');
     }
 
     getCurrentURL() {
