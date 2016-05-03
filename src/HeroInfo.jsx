@@ -6,6 +6,7 @@ import MenuItem from 'material-ui/MenuItem';
 import isNumeric from 'isnumeric';
 import { translate } from 'react-i18next';
 import math from './math';
+import _ from 'lodash';
 
 import PaddedPaper from './PaddedPaper';
 
