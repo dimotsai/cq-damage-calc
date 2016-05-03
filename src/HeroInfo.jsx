@@ -13,7 +13,7 @@ class HeroInfo extends React.Component {
 	constructor(props, context) {
 		super(props, context);
 
-		this.state = {
+		this.state = Object.assign({
 			basis: 'atk',
 			value: 1000,
 			criticalChance: 10,
@@ -24,7 +24,7 @@ class HeroInfo extends React.Component {
 			damageType: 'physical',
 			skill: 200,
 			isPvP: true
-		};
+		}, props.initialData);
 
 		this.fieldTypes = {
 			basis: 'string',
@@ -45,6 +45,11 @@ class HeroInfo extends React.Component {
 	componentWillMount() {
 		this.props.onChange(null, this.state);
 	}
+
+    componentWillReceiveProps(props) {
+        if (!_.isEqual(props.initialData, this.props.initialData))
+            this.setState(Object.assign(this.state, props.initialData));
+    }
 
 	//validateType(name, value) {
 		//if (this.fieldTypes[name] === 'number') {
@@ -178,11 +183,13 @@ class HeroInfo extends React.Component {
 }
 
 HeroInfo.propTypes = {
-	onChange: React.PropTypes.func
+	onChange: React.PropTypes.func,
+    initialData: React.PropTypes.object
 };
 
 HeroInfo.defaultProps = {
-	onChange: () => {}
+	onChange: () => {},
+	initialData: {}
 };
 
 HeroInfo.contextTypes = {

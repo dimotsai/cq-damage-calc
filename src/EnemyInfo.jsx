@@ -3,6 +3,7 @@ import TextField from 'material-ui/TextField';
 import Toggle from 'material-ui/Toggle';
 import MenuItem from 'material-ui/MenuItem';
 import math from './math';
+import _ from 'lodash';
 
 import PaddedPaper from './PaddedPaper';
 
@@ -10,12 +11,12 @@ export default class EnemyInfo extends React.Component {
 	constructor(props, context) {
 		super(props, context);
 
-		this.state = {
+		this.state = Object.assign({
 			armor: 0,
 			resistance: 0,
 			damageReduced: 0,
 			evasion: 0
-		}
+		}, props.initialData);
 
         context.i18n.on('languageChanged', (lng) => {this.forceUpdate()});
 	}
@@ -23,6 +24,11 @@ export default class EnemyInfo extends React.Component {
 	componentWillMount() {
 		this.props.onChange(null, this.state);
 	}
+
+    componentWillReceiveProps(props) {
+        if (!_.isEqual(props.initialData, this.props.initialData))
+            this.setState(Object.assign(this.state, props.initialData));
+    }
 
 	handleChange(name, event, value) {
 		let state = {};
@@ -91,11 +97,13 @@ export default class EnemyInfo extends React.Component {
 }
 
 EnemyInfo.propTypes = {
-	onChange: React.PropTypes.func
+	onChange: React.PropTypes.func,
+	initialData: React.PropTypes.object
 };
 
 EnemyInfo.defaultProps = {
-	onChange: (event, info) => {}
+	onChange: (event, info) => {},
+	initialData: {}
 };
 
 EnemyInfo.contextTypes = {

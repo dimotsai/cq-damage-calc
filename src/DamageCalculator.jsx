@@ -7,12 +7,18 @@ import Divider from 'material-ui/Divider';
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
 import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
+import Popover from 'material-ui/Popover';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import ArrowDropDown from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
 import {Grid, Row, Col} from 'react-flexbox-grid';
 import { translate } from 'react-i18next';
+import queryString from 'query-string';
+import base64 from 'base64it';
+import URL from 'url';
 
 import PageContents from './PageContents';
 import PaddedPaper from './PaddedPaper';
@@ -32,7 +38,12 @@ class DamageCalculator extends React.Component {
 				criticalDamage: 0,
 				averageDamage: 0
 			},
-            helpDialogOpen: false
+            helpDialogOpen: false,
+            sharePopoverOpen: false,
+            initialData: {
+                heroInfo: null,
+                enemyInfo: null
+            }
 		}
 
 		this.attributeScaleInPvP = {
@@ -41,7 +52,47 @@ class DamageCalculator extends React.Component {
 			armor: 1.75,
 			resistance: 1.75
 		}
+
+        window.addEventListener('hashchange', this.handleHashChange.bind(this), false);
 	}
+
+    componentWillMount() {
+        this.handleHashChange();
+    }
+
+    handleHashChange() {
+        let urlParams = queryString.parse(window.location.hash);
+
+        if (urlParams && urlParams.d) {
+            try {
+                let decodedData = JSON.parse(base64.urlSafeDecode(urlParams.d));
+                this.setState({initialData: decodedData});
+            } catch (e) {
+                console.error('Parameter "d" is invalid');
+            }
+        }
+
+        console.log('hashchange');
+    }
+
+    getCurrentURL() {
+        let data = {
+            heroInfo: this.state.heroInfo,
+            enemyInfo: this.state.enemyInfo
+        }
+
+        let url = window.location.href;
+
+        try {
+            let encodedData = base64.urlSafeEncode(JSON.stringify(data));
+            let urlParams = {d: encodedData};
+            url = URL.resolve(url, '#' + queryString.stringify(urlParams));
+        } catch (e) {
+            console.error('Cannot encode parameter "d"');
+        }
+
+        return url;
+    }
 
 	calcResult(heroInfo, enemyInfo) {
 		if (heroInfo === null || enemyInfo === null) {
@@ -108,6 +159,19 @@ class DamageCalculator extends React.Component {
         });
     }
 
+	openSharePopover(event) {
+        this.setState({
+            sharePopoverOpen: true,
+            shareAnchorEl: event.currentTarget
+        });
+	}
+
+    closeSharePopover() {
+        this.setState({
+            sharePopoverOpen: false
+        });
+    }
+
 	render() {
 
         const t = this.context.i18n.getFixedT();
@@ -154,15 +218,29 @@ class DamageCalculator extends React.Component {
 						<Grid>
 							<Row>
 								<Col xs={12} sm={6} md={6} lg={6}>
-									<HeroInfo onChange={this.handleChange.bind(this, 'heroInfo')} />
+									<HeroInfo onChange={this.handleChange.bind(this, 'heroInfo')} initialData={this.state.initialData.heroInfo} />
 								</Col>
 								<Col xs={12} sm={6} md={6} lg={6}>
-									<EnemyInfo onChange={this.handleChange.bind(this, 'enemyInfo')}/>
+									<EnemyInfo onChange={this.handleChange.bind(this, 'enemyInfo')} initialData={this.state.initialData.enemyInfo} />
 									<Result
 										damage={this.state.result.damage}
 										criticalDamage={this.state.result.criticalDamage}
 										averageDamage={this.state.result.averageDamage}
 									/>
+                                    <RaisedButton
+                                        style={{float: 'right'}} primary={true} label="Share" onTouchTap={this.openSharePopover.bind(this)}
+                                    />
+									<Popover
+									  open={this.state.sharePopoverOpen}
+									  anchorEl={this.state.shareAnchorEl}
+									  anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+									  targetOrigin={{horizontal: 'left', vertical: 'top'}}
+									  onRequestClose={this.closeSharePopover.bind(this)}
+									>
+									  <div style={{padding: '10px 20px'}}>
+										<TextField id="currentURL" defaultValue={this.getCurrentURL()} onFocus={(event) => {event.currentTarget.select()}} />
+									  </div>
+									</Popover>
 								</Col>
 							</Row>
 							<Row>
