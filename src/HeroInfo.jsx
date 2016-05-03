@@ -119,7 +119,7 @@ class HeroInfo extends React.Component {
 					<MenuItem key={1} value={"atk"} primaryText={t('common:attackPower')} />
 					<MenuItem key={2} value={"hp"} primaryText={t('common:hp')} />
 					<MenuItem key={3} value={"armor"} primaryText={t('common:armor')} />
-					<MenuItem key={4} value={"resist"} primaryText={t('common:resistance')} />
+					<MenuItem key={4} value={"resistance"} primaryText={t('common:resistance')} />
 				</SelectField><br />
 				<TextField
 				  floatingLabelText={t('common:value')}
