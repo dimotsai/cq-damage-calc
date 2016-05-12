@@ -25,6 +25,7 @@ import PaddedPaper from './PaddedPaper';
 import HeroInfo from './HeroInfo';
 import EnemyInfo from './EnemyInfo';
 import Result from './Result';
+import math from './math';
 
 class DamageCalculator extends React.Component {
 	constructor(props, context) {
@@ -92,10 +93,26 @@ class DamageCalculator extends React.Component {
         return url;
     }
 
-	calcResult(heroInfo, enemyInfo) {
-		if (heroInfo === null || enemyInfo === null) {
+    /*
+     * evaluate every expression, return the original value if fails
+     */
+    evalInfo(info) {
+        return _.mapValues(info, function (oldValue) {
+            try {
+                return math.eval(oldValue);
+            } catch (e) {
+                return oldValue;
+            }
+        });
+    }
+
+	calcResult(oldHeroInfo, oldEnemyInfo) {
+		if (oldHeroInfo === null || oldEnemyInfo === null) {
 			return Result.defaultProps;
 		}
+
+        let heroInfo = this.evalInfo(oldHeroInfo);
+        let enemyInfo = this.evalInfo(oldEnemyInfo);
 
 		let result = {};
 		let damageScale = 0.0;
