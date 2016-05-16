@@ -24,5 +24,6 @@
     "hero": "英雄",
     "enemy": "敵人",
     "result": "結果",
-    "helpMessage": "在欄位中允許輸入以下的算式："
+    "helpMessage": "在欄位中允許輸入以下的算式：",
+    "dealtDamage": "造成傷害"
 }

@@ -24,5 +24,6 @@
     "hero": "Hero",
     "enemy": "Enemy",
     "result": "Result",
-    "helpMessage": "The following expressions are allowed in all text fields: "
+    "helpMessage": "The following expressions are allowed in all text fields: ",
+    "dealtDamage": "Dealt Damage"
 }

@@ -37,7 +37,8 @@ class DamageCalculator extends React.Component {
 			result: {
 				damage: 0,
 				criticalDamage: 0,
-				averageDamage: 0
+				averageDamage: 0,
+                dealtDamage: 100
 			},
             helpDialogOpen: false,
             sharePopoverOpen: false,
@@ -129,6 +130,8 @@ class DamageCalculator extends React.Component {
 		}
 
 		damageScale *= (1.0 - enemyInfo.damageReduced / 100.0);
+
+        result.dealtDamage = damageScale * 100.0;
 
 		result.damage =
 			(isPvP ? (this.attributeScaleInPvP[heroInfo.basis] * heroInfo.value) : heroInfo.value)
@@ -241,6 +244,7 @@ class DamageCalculator extends React.Component {
 										damage={this.state.result.damage}
 										criticalDamage={this.state.result.criticalDamage}
 										averageDamage={this.state.result.averageDamage}
+										dealtDamage={this.state.result.dealtDamage}
 									/>
                                     <RaisedButton
                                         style={{float: 'right'}} primary={true} label="Share" onTouchTap={this.openSharePopover.bind(this)}

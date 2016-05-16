@@ -11,7 +11,8 @@ export default class Result extends React.Component {
 		this.state = {
 			damage: 0,
 			criticalDamage: 0,
-			averageDamage: 0
+			averageDamage: 0,
+            dealtDamage: 100
 		}
 
         context.i18n.on('languageChanged', (lng) => {this.forceUpdate()});
@@ -21,7 +22,8 @@ export default class Result extends React.Component {
 		this.setState({
 			damage: props.damage,
 			criticalDamage: props.criticalDamage,
-			averageDamage: props.averageDamage
+			averageDamage: props.averageDamage,
+            dealtDamage: props.dealtDamage
 		});
 	}
 
@@ -35,16 +37,20 @@ export default class Result extends React.Component {
 				<List>
 					<ListItem
 						primaryText={t('common:damage')}
-						secondaryText={this.state.damage.toString()}
+						secondaryText={this.state.damage.toFixed(2).toString()}
 					/>
 					<ListItem
 						primaryText={t('common:criticalDamage')}
-						secondaryText={this.state.criticalDamage.toString()}
+						secondaryText={this.state.criticalDamage.toFixed(2).toString()}
 					/>
 					<ListItem
 						primaryText={t('common:averageDamageWithEvasion')}
-						secondaryText={this.state.averageDamage.toString()}
+						secondaryText={this.state.averageDamage.toFixed(2).toString()}
 					/>
+                    <ListItem
+                        primaryText={t('common:dealtDamage')}
+                        secondaryText={this.state.dealtDamage.toFixed(2).toString() + '%'}
+                    />
 				</List>
 			</PaddedPaper>
 		);
