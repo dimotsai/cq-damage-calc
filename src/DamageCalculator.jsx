@@ -51,8 +51,8 @@ class DamageCalculator extends React.Component {
 		this.attributeScaleInPvP = {
 			atk: 1.0,
 			hp: 1.0,
-			armor: 1.75,
-			resistance: 1.75
+			armor: 1.0,
+			resistance: 1.0
 		}
 
         window.addEventListener('hashchange', this.handleHashChange.bind(this), false);
