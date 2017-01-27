@@ -52,6 +52,16 @@ class HeroInfo extends React.Component {
             this.setState(Object.assign(this.state, props.initialData));
     }
 
+    renderEvaluatedField(name) {
+        let value;
+        try {
+            value = math.eval(this.state[name]);
+        } catch(e) {
+            value = NaN;
+        }
+        return <span>{value}</span>;
+    }
+
     //validateType(name, value) {
         //if (this.fieldTypes[name] === 'number') {
             //return isNumeric(value);
@@ -107,6 +117,10 @@ class HeroInfo extends React.Component {
 
     render() {
         const t = this.context.i18n.getFixedT();
+        const style = {textAlign: 'left', width: '3em', display: 'inline-block'};
+        const noPercent = <span style={style}></span>;
+        const percent = <span style={style}>%</span>;
+        const equal = <span>=</span>;
 
         return (
             <PaddedPaper>
@@ -126,7 +140,7 @@ class HeroInfo extends React.Component {
                   onChange={this.handleChange.bind(this, 'value')}
                   value={this.state.value}
                   onKeyDown={this.handleKeyDown.bind(this, 'value')}
-                /><br/>
+                />{noPercent}{equal}{this.renderEvaluatedField('value')}<br/>
                 <SelectField
                   value={this.state.damageType}
                   onChange={this.handleSelectFieldChange.bind(this, 'damageType')}
@@ -141,37 +155,37 @@ class HeroInfo extends React.Component {
                   onChange={this.handleChange.bind(this, 'criticalChance')}
                   value={this.state.criticalChance}
                   onKeyDown={this.handleKeyDown.bind(this, 'criticalChance')}
-                />%<br/>
+                />{percent}{equal}{this.renderEvaluatedField('criticalChance')}%<br/>
                 <TextField
                   floatingLabelText={t('common:criticalDamage')}
                   onChange={this.handleChange.bind(this, 'criticalDamage')}
                   value={this.state.criticalDamage}
                   onKeyDown={this.handleKeyDown.bind(this, 'criticalDamage')}
-                />%<br/>
+                />{percent}{equal}{this.renderEvaluatedField('criticalDamage')}%<br/>
                 <TextField
                   floatingLabelText={t('common:accuracy')}
                   onChange={this.handleChange.bind(this, 'accuracy')}
                   value={this.state.accuracy}
                   onKeyDown={this.handleKeyDown.bind(this, 'accuracy')}
-                /><br/>
+                />{noPercent}{equal}{this.renderEvaluatedField('accuracy')}<br/>
                 <TextField
                   floatingLabelText={t('common:armorPenetration')}
                   onChange={this.handleChange.bind(this, 'armorPenetration')}
                   value={this.state.armorPenetration}
                   onKeyDown={this.handleKeyDown.bind(this, 'armorPenetration')}
-                /><br/>
+                />{noPercent}{equal}{this.renderEvaluatedField('armorPenetration')}<br/>
                 <TextField
                   floatingLabelText={t('common:resistancePenetration')}
                   onChange={this.handleChange.bind(this, 'resistancePenetration')}
                   value={this.state.resistancePenetration}
                   onKeyDown={this.handleKeyDown.bind(this, 'resistancePenetration')}
-                /><br/>
+                />{noPercent}{equal}{this.renderEvaluatedField('resistancePenetration')}<br/>
                 <TextField
                   floatingLabelText={t('common:skillPower')}
                   onChange={this.handleChange.bind(this, 'skill')}
                   value={this.state.skill}
                   onKeyDown={this.handleKeyDown.bind(this, 'skill')}
-                />%<br/>
+                />{percent}{equal}{this.renderEvaluatedField('skill')}%<br/>
                 <Toggle
                       label={t('common:isPvP')}
                       defaultToggled={this.state.isPvP}

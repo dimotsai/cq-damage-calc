@@ -60,9 +60,22 @@ export default class EnemyInfo extends React.Component {
         }
     }
 
-    render() {
+    renderEvaluatedField(name) {
+        let value;
+        try {
+            value = math.eval(this.state[name]);
+        } catch(e) {
+            value = NaN;
+        }
+        return <span>{value}</span>;
+    }
 
+    render() {
         const t = this.context.i18n.getFixedT();
+        const style = {textAlign: 'left', width: '3em', display: 'inline-block'};
+        const noPercent = <span style={style}></span>;
+        const percent = <span style={style}>%</span>;
+        const equal = <span>=</span>;
 
         return (
             <PaddedPaper>
@@ -72,25 +85,25 @@ export default class EnemyInfo extends React.Component {
                   onChange={this.handleChange.bind(this, 'armor')}
                   value={this.state.armor}
                   onKeyDown={this.handleKeyDown.bind(this, 'armor')}
-                /><br/>
+                />{noPercent}{equal}{this.renderEvaluatedField('armor')}<br/>
                 <TextField
                   floatingLabelText={t('common:resistance')}
                   onChange={this.handleChange.bind(this, 'resistance')}
                   value={this.state.resistance}
                   onKeyDown={this.handleKeyDown.bind(this, 'resistance')}
-                /><br/>
+                />{noPercent}{equal}{this.renderEvaluatedField('resistance')}<br/>
                 <TextField
                   floatingLabelText={t('common:damageReducedBy')}
                   onChange={this.handleChange.bind(this, 'damageReduced')}
                   value={this.state.damageReduced}
                   onKeyDown={this.handleKeyDown.bind(this, 'damageReduced')}
-                />%<br/>
+                />{percent}{equal}{this.renderEvaluatedField('damageReduced')}%<br/>
                 <TextField
                   floatingLabelText={t('common:evasion')}
                   onChange={this.handleChange.bind(this, 'evasion')}
                   value={this.state.evasion}
                   onKeyDown={this.handleKeyDown.bind(this, 'evasion')}
-                /><br/>
+                />{percent}{equal}{this.renderEvaluatedField('evasion')}%<br/>
             </PaddedPaper>
         );
     }
