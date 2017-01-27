@@ -16,21 +16,21 @@ import DamageCalculator from './DamageCalculator'
 import i18n from './i18n';
 
 class App extends React.Component {
-	constructor(props, context) {
-		super(props, context);
-	}
+    constructor(props, context) {
+        super(props, context);
+    }
 
-	render() {
-		return (
-			<I18nextProvider i18n={ i18n }>
-				<DamageCalculator />
-			</I18nextProvider>
-		);
-	}
+    render() {
+        return (
+            <I18nextProvider i18n={ i18n }>
+                <DamageCalculator />
+            </I18nextProvider>
+        );
+    }
 }
 
 ReactDOM.render(
-	<App />,
-	document.getElementById('app')
+    <App />,
+    document.getElementById('app')
 );
 

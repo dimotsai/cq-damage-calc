@@ -28,35 +28,35 @@ import Result from './Result';
 import math from './math';
 
 class DamageCalculator extends React.Component {
-	constructor(props, context) {
-		super(props, context);
+    constructor(props, context) {
+        super(props, context);
 
-		this.state = {
-			heroInfo: null,
-			enemyInfo: null,
-			result: {
-				damage: 0,
-				criticalDamage: 0,
-				averageDamage: 0,
+        this.state = {
+            heroInfo: null,
+            enemyInfo: null,
+            result: {
+                damage: 0,
+                criticalDamage: 0,
+                averageDamage: 0,
                 dealtDamage: 100
-			},
+            },
             helpDialogOpen: false,
             sharePopoverOpen: false,
             initialData: {
                 heroInfo: null,
                 enemyInfo: null
             }
-		}
+        }
 
-		this.attributeScaleInPvP = {
-			atk: 1.0,
-			hp: 1.0,
-			armor: 1.0,
-			resistance: 1.0
-		}
+        this.attributeScaleInPvP = {
+            atk: 1.0,
+            hp: 1.0,
+            armor: 1.0,
+            resistance: 1.0
+        }
 
         window.addEventListener('hashchange', this.handleHashChange.bind(this), false);
-	}
+    }
 
     componentWillMount() {
         this.handleHashChange();
@@ -107,59 +107,59 @@ class DamageCalculator extends React.Component {
         });
     }
 
-	calcResult(oldHeroInfo, oldEnemyInfo) {
-		if (oldHeroInfo === null || oldEnemyInfo === null) {
-			return Result.defaultProps;
-		}
+    calcResult(oldHeroInfo, oldEnemyInfo) {
+        if (oldHeroInfo === null || oldEnemyInfo === null) {
+            return Result.defaultProps;
+        }
 
         let heroInfo = this.evalInfo(oldHeroInfo);
         let enemyInfo = this.evalInfo(oldEnemyInfo);
 
-		let result = {};
-		let damageScale = 0.0;
-		let isPvP = heroInfo.isPvP;
+        let result = {};
+        let damageScale = 0.0;
+        let isPvP = heroInfo.isPvP;
 
-		if (heroInfo.damageType == 'physical') {
-			damageScale =
-				1.0/(Math.max(enemyInfo.armor * (isPvP ? this.attributeScaleInPvP.armor : 1.0) - heroInfo.armorPenetration, 0) * 0.0034 + 1.0);
-		} else if (heroInfo.damageType == 'magic') {
-			damageScale =
-				1.0/(Math.max(enemyInfo.resistance * (isPvP ? this.attributeScaleInPvP.resistance : 1.0) - heroInfo.resistancePenetration, 0) * 0.0034 + 1.0);
-		} else if (heroInfo.damageType == 'neutral') {
-			damageScale = 1.0;
-		}
+        if (heroInfo.damageType == 'physical') {
+            damageScale =
+                1.0/(Math.max(enemyInfo.armor * (isPvP ? this.attributeScaleInPvP.armor : 1.0) - heroInfo.armorPenetration, 0) * 0.0034 + 1.0);
+        } else if (heroInfo.damageType == 'magic') {
+            damageScale =
+                1.0/(Math.max(enemyInfo.resistance * (isPvP ? this.attributeScaleInPvP.resistance : 1.0) - heroInfo.resistancePenetration, 0) * 0.0034 + 1.0);
+        } else if (heroInfo.damageType == 'neutral') {
+            damageScale = 1.0;
+        }
 
-		damageScale *= (1.0 - enemyInfo.damageReduced / 100.0);
+        damageScale *= (1.0 - enemyInfo.damageReduced / 100.0);
 
         result.dealtDamage = damageScale * 100.0;
 
-		result.damage =
-			(isPvP ? (this.attributeScaleInPvP[heroInfo.basis] * heroInfo.value) : heroInfo.value)
-			* heroInfo.skill / 100.0
-			* damageScale
-			* (isPvP ? 0.6 : 1.0);
+        result.damage =
+            (isPvP ? (this.attributeScaleInPvP[heroInfo.basis] * heroInfo.value) : heroInfo.value)
+            * heroInfo.skill / 100.0
+            * damageScale
+            * (isPvP ? 0.6 : 1.0);
 
-		result.criticalDamage = result.damage * (1.0 + heroInfo.criticalDamage / 100.0);
+        result.criticalDamage = result.damage * (1.0 + heroInfo.criticalDamage / 100.0);
 
-		result.averageDamage =
-			(heroInfo.criticalChance / 100.0 * result.criticalDamage)
-			+ (1.0 - heroInfo.criticalChance / 100.0) * result.damage;
+        result.averageDamage =
+            (heroInfo.criticalChance / 100.0 * result.criticalDamage)
+            + (1.0 - heroInfo.criticalChance / 100.0) * result.damage;
 
-		if (heroInfo.damageType != 'neutral') {
-			let missRate = Math.max(enemyInfo.evasion - heroInfo.accuracy, 0) / 100.0;
-			let hitRate = 1.0 - missRate;
-			result.averageDamage *= hitRate;
-		}
+        if (heroInfo.damageType != 'neutral') {
+            let missRate = Math.max(enemyInfo.evasion - heroInfo.accuracy, 0) / 100.0;
+            let hitRate = 1.0 - missRate;
+            result.averageDamage *= hitRate;
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	handleChange(who, event, info) {
-		let state = this.state;
-		state[who] = info;
-		state['result'] = this.calcResult(state.heroInfo, state.enemyInfo);
-		this.setState(state);
-	}
+    handleChange(who, event, info) {
+        let state = this.state;
+        state[who] = info;
+        state['result'] = this.calcResult(state.heroInfo, state.enemyInfo);
+        this.setState(state);
+    }
 
     handleChangeLanguage(lang, e) {
         this.context.i18n.changeLanguage(lang);
@@ -177,12 +177,12 @@ class DamageCalculator extends React.Component {
         });
     }
 
-	openSharePopover(event) {
+    openSharePopover(event) {
         this.setState({
             sharePopoverOpen: true,
             shareAnchorEl: event.currentTarget
         });
-	}
+    }
 
     closeSharePopover() {
         this.setState({
@@ -190,93 +190,93 @@ class DamageCalculator extends React.Component {
         });
     }
 
-	render() {
+    render() {
 
         const t = this.context.i18n.getFixedT();
 
-		const helpDialogActions = [
-		  <FlatButton
-			label="Ok"
-			primary={true}
-			keyboardFocused={true}
-			onTouchTap={this.closeHelpDialog.bind(this)}
-		  />
-		];
-		return (
-			<MuiThemeProvider muiTheme={getMuiTheme()}>
-				<div>
-					<AppBar
-						title="CQ Damage Calculator"
-						style={{ position: "fixed", top: 0, left: 0 }}
-						iconElementRight={
-							<IconMenu
-								iconButtonElement={
-									<IconButton><MoreVertIcon /></IconButton>
-								}
-								targetOrigin={{horizontal: 'right', vertical: 'top'}}
-								anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-							>
-								<MenuItem
+        const helpDialogActions = [
+          <FlatButton
+            label="Ok"
+            primary={true}
+            keyboardFocused={true}
+            onTouchTap={this.closeHelpDialog.bind(this)}
+          />
+        ];
+        return (
+            <MuiThemeProvider muiTheme={getMuiTheme()}>
+                <div>
+                    <AppBar
+                        title="CQ Damage Calculator"
+                        style={{ position: "fixed", top: 0, left: 0 }}
+                        iconElementRight={
+                            <IconMenu
+                                iconButtonElement={
+                                    <IconButton><MoreVertIcon /></IconButton>
+                                }
+                                targetOrigin={{horizontal: 'right', vertical: 'top'}}
+                                anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+                            >
+                                <MenuItem
                                     primaryText="Help" onTouchTap={this.openHelpDialog.bind(this)}
                                 />
-								<MenuItem
+                                <MenuItem
                                     primaryText="GitHub" onTouchTap={() => {window.open('https://github.com/dimotsai/cq-damage-calc/')}}
                                 />
                                 <Divider />
-								<MenuItem
+                                <MenuItem
                                     primaryText="English" onTouchTap={this.handleChangeLanguage.bind(this, 'en')}
                                 />
-								<MenuItem
+                                <MenuItem
                                     primaryText="繁體中文" onTouchTap={this.handleChangeLanguage.bind(this, 'zh-TW')}
                                 />
-							</IconMenu>
-						}
-					/>
-					<PageContents>
-						<Grid>
-							<Row>
-								<Col xs={12} sm={6} md={6} lg={6}>
-									<HeroInfo onChange={this.handleChange.bind(this, 'heroInfo')} initialData={this.state.initialData.heroInfo} />
-								</Col>
-								<Col xs={12} sm={6} md={6} lg={6}>
-									<EnemyInfo onChange={this.handleChange.bind(this, 'enemyInfo')} initialData={this.state.initialData.enemyInfo} />
-									<Result
-										damage={this.state.result.damage}
-										criticalDamage={this.state.result.criticalDamage}
-										averageDamage={this.state.result.averageDamage}
-										dealtDamage={this.state.result.dealtDamage}
-									/>
+                            </IconMenu>
+                        }
+                    />
+                    <PageContents>
+                        <Grid>
+                            <Row>
+                                <Col xs={12} sm={6} md={6} lg={6}>
+                                    <HeroInfo onChange={this.handleChange.bind(this, 'heroInfo')} initialData={this.state.initialData.heroInfo} />
+                                </Col>
+                                <Col xs={12} sm={6} md={6} lg={6}>
+                                    <EnemyInfo onChange={this.handleChange.bind(this, 'enemyInfo')} initialData={this.state.initialData.enemyInfo} />
+                                    <Result
+                                        damage={this.state.result.damage}
+                                        criticalDamage={this.state.result.criticalDamage}
+                                        averageDamage={this.state.result.averageDamage}
+                                        dealtDamage={this.state.result.dealtDamage}
+                                    />
                                     <RaisedButton
                                         style={{float: 'right'}} primary={true} label="Share" onTouchTap={this.openSharePopover.bind(this)}
                                     />
-									<Popover
-									  open={this.state.sharePopoverOpen}
-									  anchorEl={this.state.shareAnchorEl}
-									  anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-									  targetOrigin={{horizontal: 'left', vertical: 'top'}}
-									  onRequestClose={this.closeSharePopover.bind(this)}
-									>
-									  <div style={{padding: '10px 20px'}}>
-										<TextField id="currentURL" defaultValue={this.getCurrentURL()} onFocus={(event) => {event.currentTarget.select()}} />
-									  </div>
-									</Popover>
-								</Col>
-							</Row>
-							<Row>
-								<Col xs={12} sm={12} md={12} lg={12}>
-									<p style={{textAlign: 'right'}}>Created by Dimo Tsai (綿綿糖)</p>
-								</Col>
-							</Row>
-						</Grid>
-					</PageContents>
-					<Dialog
-					  title="Help"
-					  actions={helpDialogActions}
-					  modal={false}
-					  open={this.state.helpDialogOpen}
-					  onRequestClose={this.closeHelpDialog.bind(this)}
-					>
-						<p>{t('common:helpMessage')}</p>
+                                    <Popover
+                                      open={this.state.sharePopoverOpen}
+                                      anchorEl={this.state.shareAnchorEl}
+                                      anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+                                      targetOrigin={{horizontal: 'left', vertical: 'top'}}
+                                      onRequestClose={this.closeSharePopover.bind(this)}
+                                    >
+                                      <div style={{padding: '10px 20px'}}>
+                                        <TextField id="currentURL" defaultValue={this.getCurrentURL()} onFocus={(event) => {event.currentTarget.select()}} />
+                                      </div>
+                                    </Popover>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col xs={12} sm={12} md={12} lg={12}>
+                                    <p style={{textAlign: 'right'}}>Created by Dimo Tsai (綿綿糖)</p>
+                                </Col>
+                            </Row>
+                        </Grid>
+                    </PageContents>
+                    <Dialog
+                      title="Help"
+                      actions={helpDialogActions}
+                      modal={false}
+                      open={this.state.helpDialogOpen}
+                      onRequestClose={this.closeHelpDialog.bind(this)}
+                    >
+                        <p>{t('common:helpMessage')}</p>
                         <ul>
                             <li>29 + 2 &#9166;</li>
                             <li>29 - 2 &#9166;</li>
@@ -285,15 +285,15 @@ class DamageCalculator extends React.Component {
                             <li>29 * 3 - 5 &#9166;</li>
                             <li>abs(-29) &#9166;</li>
                         </ul>
-					</Dialog>
-				</div>
-			</MuiThemeProvider>
-		);
-	}
+                    </Dialog>
+                </div>
+            </MuiThemeProvider>
+        );
+    }
 }
 
 DamageCalculator.contextTypes = {
-	i18n: React.PropTypes.object.isRequired
+    i18n: React.PropTypes.object.isRequired
 };
 
 export default DamageCalculator;
