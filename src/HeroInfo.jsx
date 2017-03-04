@@ -15,16 +15,16 @@ class HeroInfo extends React.Component {
         super(props, context);
 
         this.state = Object.assign({
-            basis: 'atk',
+            basis: HeroInfo.bases.attackPower,
             value: 1000,
             criticalChance: 10,
             criticalDamage: 50,
             accuracy: 0,
             armorPenetration: 0,
             resistancePenetration: 0,
-            damageType: 'physical',
+            damageType: HeroInfo.damageTypes.physical,
             skill: 200,
-            isPvP: true
+            gameMode: HeroInfo.gameModes.normal
         }, props.initialData);
 
         this.fieldTypes = {
@@ -37,7 +37,7 @@ class HeroInfo extends React.Component {
             resistancePenetration: 'number',
             damageType: 'string',
             skill: 'number',
-            isPvP: 'boolean'
+            gameMode: 'string'
         }
 
         context.i18n.on('languageChanged', (lng) => {this.forceUpdate()});
@@ -130,10 +130,10 @@ class HeroInfo extends React.Component {
                   onChange={this.handleSelectFieldChange.bind(this, 'basis')}
                   floatingLabelText={t('common:basis')}
                 >
-                    <MenuItem key={1} value={"atk"} primaryText={t('common:attackPower')} />
-                    <MenuItem key={2} value={"hp"} primaryText={t('common:hp')} />
-                    <MenuItem key={3} value={"armor"} primaryText={t('common:armor')} />
-                    <MenuItem key={4} value={"resistance"} primaryText={t('common:resistance')} />
+                    <MenuItem key={1} value={HeroInfo.bases.attackPower} primaryText={t('common:attackPower')} />
+                    <MenuItem key={2} value={HeroInfo.bases.healthPoint} primaryText={t('common:healthPoint')} />
+                    <MenuItem key={3} value={HeroInfo.bases.armor} primaryText={t('common:armor')} />
+                    <MenuItem key={4} value={HeroInfo.bases.resistance} primaryText={t('common:resistance')} />
                 </SelectField><br />
                 <TextField
                   floatingLabelText={t('common:value')}
@@ -146,9 +146,9 @@ class HeroInfo extends React.Component {
                   onChange={this.handleSelectFieldChange.bind(this, 'damageType')}
                   floatingLabelText={t('common:damageType')}
                 >
-                    <MenuItem key={1} value={"physical"} primaryText={t('common:physical')} />
-                    <MenuItem key={2} value={"magic"} primaryText={t('common:magic')} />
-                    <MenuItem key={3} value={"neutral"} primaryText={t('common:neutral')} />
+                    <MenuItem key={1} value={HeroInfo.damageTypes.physical} primaryText={t('common:physical')} />
+                    <MenuItem key={2} value={HeroInfo.damageTypes.magic} primaryText={t('common:magic')} />
+                    <MenuItem key={3} value={HeroInfo.damageTypes.neutral} primaryText={t('common:neutral')} />
                 </SelectField><br />
                 <TextField
                   floatingLabelText={t('common:criticalChance')}
@@ -167,7 +167,7 @@ class HeroInfo extends React.Component {
                   onChange={this.handleChange.bind(this, 'accuracy')}
                   value={this.state.accuracy}
                   onKeyDown={this.handleKeyDown.bind(this, 'accuracy')}
-                />{noPercent}{equal}{this.renderEvaluatedField('accuracy')}<br/>
+                />{percent}{equal}{this.renderEvaluatedField('accuracy')}%<br/>
                 <TextField
                   floatingLabelText={t('common:armorPenetration')}
                   onChange={this.handleChange.bind(this, 'armorPenetration')}
@@ -186,12 +186,15 @@ class HeroInfo extends React.Component {
                   value={this.state.skill}
                   onKeyDown={this.handleKeyDown.bind(this, 'skill')}
                 />{percent}{equal}{this.renderEvaluatedField('skill')}%<br/>
-                <Toggle
-                      label={t('common:isPvP')}
-                      defaultToggled={this.state.isPvP}
-                      onToggle={this.handleChange.bind(this, 'isPvP')}
-                      style={{marginTop: 16, marginBottom: 16, maxWidth: 250}}
-                />
+                <SelectField
+                  value={this.state.gameMode}
+                  onChange={this.handleSelectFieldChange.bind(this, 'gameMode')}
+                  floatingLabelText={t('common:gameMode')}
+                >
+                    <MenuItem key={1} value={HeroInfo.gameModes.normal} primaryText={t('common:normal')} />
+                    <MenuItem key={2} value={HeroInfo.gameModes.PvC} primaryText={t('common:pvc')} />
+                    <MenuItem key={3} value={HeroInfo.gameModes.PvP} primaryText={t('common:pvp')} />
+                </SelectField><br />
             </PaddedPaper>
         );
     }
@@ -209,6 +212,25 @@ HeroInfo.defaultProps = {
 
 HeroInfo.contextTypes = {
     i18n: React.PropTypes.object.isRequired
+};
+
+HeroInfo.gameModes = {
+    PvP: 'pvp',
+    PvC: 'pvc',
+    normal: 'normal'
+};
+
+HeroInfo.damageTypes = {
+    physical: 'physical',
+    magic: 'magic',
+    neutral: 'neutral'
+}
+
+HeroInfo.bases = {
+    attackPower: 'atk',
+    healthPoint: 'hp',
+    armor: 'armor',
+    resistance: 'resistance'
 };
 
 export default HeroInfo;

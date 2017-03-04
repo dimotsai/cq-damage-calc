@@ -48,13 +48,6 @@ class DamageCalculator extends React.Component {
             }
         }
 
-        this.attributeScaleInPvP = {
-            atk: 1.0,
-            hp: 1.0,
-            armor: 1.0,
-            resistance: 1.0
-        }
-
         window.addEventListener('hashchange', this.handleHashChange.bind(this), false);
     }
 
@@ -72,6 +65,36 @@ class DamageCalculator extends React.Component {
             } catch (e) {
                 console.error('Parameter "d" is invalid');
             }
+        }
+    }
+
+    getScales(mode) {
+        switch(mode) {
+            case HeroInfo.gameModes.PvP:
+                return {
+                    damage: 0.6,
+                    [HeroInfo.bases.attackPower]: 1.0,
+                    [HeroInfo.bases.healthPoint]: 1.0,
+                    [HeroInfo.bases.armor]: 1.0,
+                    [HeroInfo.bases.resistance]: 1.0
+                }
+            case HeroInfo.gameModes.PvC:
+                return {
+                    damage: 0.6,
+                    [HeroInfo.bases.attackPower]: 1.0,
+                    [HeroInfo.bases.healthPoint]: 1.0,
+                    [HeroInfo.bases.armor]: 1.65,
+                    [HeroInfo.bases.resistance]: 1.65
+                }
+            case HeroInfo.gameModes.Normal:
+            default:
+                return {
+                    damage: 1.0,
+                    [HeroInfo.bases.attackPower]: 1.0,
+                    [HeroInfo.bases.healthPoint]: 1.0,
+                    [HeroInfo.bases.armor]: 1.0,
+                    [HeroInfo.bases.resistance]: 1.0
+                }
         }
     }
 
@@ -98,34 +121,34 @@ class DamageCalculator extends React.Component {
      * evaluate every expression, return the original value if fails
      */
     evalInfo(info) {
-        return _.mapValues(info, function (oldValue) {
+        return _.mapValues(info, function (rawValue) {
             try {
-                return math.eval(oldValue);
+                return math.eval(rawValue);
             } catch (e) {
-                return oldValue;
+                return rawValue;
             }
         });
     }
 
-    calcResult(oldHeroInfo, oldEnemyInfo) {
-        if (oldHeroInfo === null || oldEnemyInfo === null) {
+    calcResult(rawHeroInfo, rawEnemyInfo) {
+        if (rawHeroInfo === null || rawEnemyInfo === null) {
             return Result.defaultProps;
         }
 
-        let heroInfo = this.evalInfo(oldHeroInfo);
-        let enemyInfo = this.evalInfo(oldEnemyInfo);
+        let heroInfo = this.evalInfo(rawHeroInfo);
+        let enemyInfo = this.evalInfo(rawEnemyInfo);
 
         let result = {};
         let damageScale = 0.0;
-        let isPvP = heroInfo.isPvP;
+        let scales = this.getScales(heroInfo.gameMode);
 
-        if (heroInfo.damageType == 'physical') {
+        if (heroInfo.damageType === HeroInfo.damageTypes.physical) {
             damageScale =
-                1.0/(Math.max(enemyInfo.armor * (isPvP ? this.attributeScaleInPvP.armor : 1.0) - heroInfo.armorPenetration, 0) * 0.0034 + 1.0);
-        } else if (heroInfo.damageType == 'magic') {
+                1.0/(Math.max(enemyInfo.armor * scales.armor - heroInfo.armorPenetration, 0) * 0.0034 + 1.0);
+        } else if (heroInfo.damageType === HeroInfo.damageTypes.magic) {
             damageScale =
-                1.0/(Math.max(enemyInfo.resistance * (isPvP ? this.attributeScaleInPvP.resistance : 1.0) - heroInfo.resistancePenetration, 0) * 0.0034 + 1.0);
-        } else if (heroInfo.damageType == 'neutral') {
+                1.0/(Math.max(enemyInfo.resistance * scales.resistance - heroInfo.resistancePenetration, 0) * 0.0034 + 1.0);
+        } else if (heroInfo.damageType === HeroInfo.damageTypes.neutral) {
             damageScale = 1.0;
         }
 
@@ -134,10 +157,10 @@ class DamageCalculator extends React.Component {
         result.dealtDamage = damageScale * 100.0;
 
         result.damage =
-            (isPvP ? (this.attributeScaleInPvP[heroInfo.basis] * heroInfo.value) : heroInfo.value)
+            scales[heroInfo.basis] * heroInfo.value
             * heroInfo.skill / 100.0
             * damageScale
-            * (isPvP ? 0.6 : 1.0);
+            * scales.damage;
 
         result.criticalDamage = result.damage * (1.0 + heroInfo.criticalDamage / 100.0);
 
@@ -145,7 +168,7 @@ class DamageCalculator extends React.Component {
             (heroInfo.criticalChance / 100.0 * result.criticalDamage)
             + (1.0 - heroInfo.criticalChance / 100.0) * result.damage;
 
-        if (heroInfo.damageType != 'neutral') {
+        if (heroInfo.damageType !== HeroInfo.damageTypes.neutral) {
             let missRate = Math.max(enemyInfo.evasion - heroInfo.accuracy, 0) / 100.0;
             let hitRate = 1.0 - missRate;
             result.averageDamage *= hitRate;

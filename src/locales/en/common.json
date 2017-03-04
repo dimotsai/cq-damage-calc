@@ -1,6 +1,6 @@
 {
     "attackPower" : "Attack Power",
-    "hp": "HP",
+    "healthPoint": "HP",
     "armor": "Armor",
     "resistance": "Resistance",
     "armorPenetration": "Armor Penetration",
@@ -25,5 +25,9 @@
     "enemy": "Enemy",
     "result": "Result",
     "helpMessage": "The following expressions are allowed in all text fields: ",
-    "dealtDamage": "Dealt Damage"
+    "dealtDamage": "Dealt Damage",
+    "normal": "Normal",
+    "pvp": "PvP",
+    "pvc": "PvC",
+    "gameMode": "Game Mode"
 }

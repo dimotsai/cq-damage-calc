@@ -1,6 +1,6 @@
 {
     "attackPower" : "攻擊力",
-    "hp": "體力",
+    "healthPoint": "體力",
     "armor": "防禦力",
     "resistance": "抵抗力",
     "armorPenetration": "防禦貫通力",
@@ -25,5 +25,9 @@
     "enemy": "敵人",
     "result": "結果",
     "helpMessage": "在欄位中允許輸入以下的算式：",
-    "dealtDamage": "造成傷害"
+    "dealtDamage": "造成傷害",
+    "normal": "一般",
+    "pvp": "PvP",
+    "pvc": "PvC",
+    "gameMode": "遊戲模式"
 }
